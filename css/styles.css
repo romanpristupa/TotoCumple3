@@ -62,13 +62,16 @@ section h2 {
 
 .lacirilalogo {
     padding-left: 0; /* Ajusta el padding para centrar el logo */
+    margin-bottom: 10px;
 }
 
 .lacirilalogo img {
-    width: 250px;
-    max-width: 250px;
+    width: 200px;
+    max-width: 200px;
     overflow: hidden;
-    border-radius: 50%
+    border-radius: 50%;
+    border: 4px solid var(--navy);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.2);
 }
 
 .botonAgendame {
@@ -175,6 +178,8 @@ section h2 {
 }
 .enSalon{
     font-weight: bold;
+    color: var(--red);
+    margin: 8px 0 0;
 }
 
 /* ---------------- Confirmar: perrito corriendo ---------------- */
