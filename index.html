@@ -15,7 +15,7 @@
   <!-- FACEBOOK Open Graph === -->
   <meta property="og:type" content="website" />
   <!-- <meta property="og:type" content="article" />  PARA ARTÍCULOS  -->
-  <meta property="og:title" content="TOTO CUMPLE 3 AÑO" />
+  <meta property="og:title" content="TOTO CUMPLE 3 AÑOS" />
   <meta property="og:description" content="CUMPLE DEL TOTO" />
   <meta property="og:image" content="https://romanpristupa.github.io/TotoCumple3/img/vistaprevia.jpg"/>
   <meta property="og:image:width" content="800" /><!-- Importante -->
@@ -25,11 +25,11 @@
 </head>
 <body>
   <header>
-    <img src="img/header.jpg" alt="Foto Dino">
-    <audio id="background-audio" autoplay loop>
-      <source src="grabacion.mp3" type="audio/mp3">
-      Your browser does not support the audio element.
-    </audio>
+    <img src="img/header.jpg" alt="Foto Pow Patrol">
+    <img src="img/final.jpg" alt="Pow Patrol" class="footer-img">
+    <audio id="background-audio" loop>
+    <source src="grabacion.mp3" type="audio/mp3">
+</audio>
   </header>
   <div id="resultado"></div>
   <div id="minuto"></div>
@@ -50,9 +50,7 @@
       </a>
     </article>
   </section>
-  <footer>
-    <img src="img/final.jpg" alt="Pow Patrol" class="footer-img">
-  </footer>
+ 
   <script type="text/javascript">
     var final = moment("2026-07-25T18:00:00");
     setInterval(function() {
@@ -69,13 +67,16 @@
 
     // Función para desmutear y reproducir el audio al hacer clic en cualquier parte del body
     document.addEventListener('DOMContentLoaded', function() {
-      var audio = document.getElementById('background-audio');
-      audio.muted = false;
-      audio.play().catch(function(error) {
-        // el navegador bloqueó el autoplay con sonido: arranca apenas
-        // haya el primer toque en la pantalla
-        console.log('Autoplay con sonido bloqueado, esperando primer toque:', error);
-      });
+  var audio = document.getElementById('background-audio');
+  audio.muted = false;
+  audio.play().catch(function(error) {
+    console.log('Autoplay con sonido bloqueado:', error);
+  });
+
+  document.body.addEventListener('click', function() {
+    audio.muted = false;
+    if (audio.paused) audio.play();
+  }, { once: true });
 
       document.body.addEventListener('click', function() {
         audio.muted = false;
