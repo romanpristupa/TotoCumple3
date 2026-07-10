@@ -26,33 +26,23 @@
 <body>
   <header>
     <img src="img/header.jpg" alt="Foto Dino">
-    <audio id="background-audio" autoplay loop muted>
+    <audio id="background-audio" autoplay loop>
       <source src="grabacion.mp3" type="audio/mp3">
       Your browser does not support the audio element.
     </audio>
   </header>
-  <div class="lacirilalogo">
-    <h2 class="enSalon">En Salon Tatas Multieventos</h2>
-    <img src="img/pinito.jpg" alt="Foto el pinar">
-  </div>
-  <section>
-    <h2>El dia <br> Sabado 25 de Julio de 2025 <br>de 18 a 21hs.</h2>
-    <a href="https://calendar.google.com/calendar/r/day/2025/07/27">
-      <button class="botonAgendame"> <i class="fa-solid fa-calendar-days"></i> Agendalo</button>
-    </a>
-  </section>
   <div id="resultado"></div>
   <div id="minuto"></div>
   <section>
     <a href="https://maps.app.goo.gl/Kgv1fYfgvtdCCzSVA" class="direccion">
-      <h2 class="direccion">Avenida Camino General Belgrano  N° 4398 </h2>
+      <h2 class="direccion">Avenida Camino General Belgrano  N°4398 </h2>
     </a>
-    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5404.580099701784!2d-58.21928174097193!3d-34.80451539901284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a328f11fc9a32d%3A0x8c6e89d2b7d4c76b!2sCno.%20Gral.%20Belgrano%204398%2C%20B1837CHY%20Sourigues%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1783708141708!5m2!1ses-419!2sar" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <iframe class="mapa" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3277.5158160422675!2d-58.22164702352429!3d-34.76778776618278!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32f336c627a4b%3A0x6064465a360df711!2sEl%20Pinar%20Parties!5e0!3m2!1ses!2sar!4v1751757713101!5m2!1ses!2sar" width="300" height="300" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
   </section>
   <section>
     <article>
-      <a href="https://api.whatsapp.com/send?phone=5491159904862&text=Confirmo%C2%A0mi%C2%A0presencia">
-        <button class="botonConfirmar botonAgendame"><i class="fa-solid fa-square-check"></i> Confirmar Presencia</button>
+      <a href="https://api.whatsapp.com/send?phone=5491159904862&text=Confirmo%C2%A0mi%C2%A0presencia" id="confirmLink">
+        <button class="botonConfirmar botonAgendame" id="confirmBtn"><i class="fa-solid fa-square-check"></i> Confirmar Presencia</button>
       </a>
     </article>
   </section>
@@ -76,14 +66,71 @@
     // Función para desmutear y reproducir el audio al hacer clic en cualquier parte del body
     document.addEventListener('DOMContentLoaded', function() {
       var audio = document.getElementById('background-audio');
+      audio.muted = false;
       audio.play().catch(function(error) {
-        console.log('Autoplay was prevented:', error);
+        // el navegador bloqueó el autoplay con sonido: arranca apenas
+        // haya el primer toque en la pantalla
+        console.log('Autoplay con sonido bloqueado, esperando primer toque:', error);
       });
 
       document.body.addEventListener('click', function() {
         audio.muted = false;
-        audio.play();
+        if (audio.paused) audio.play();
       }, { once: true });
+
+      // ---- Animación del perrito corriendo al confirmar ----
+      var confirmLink = document.getElementById('confirmLink');
+      var confirmBtn = document.getElementById('confirmBtn');
+
+      confirmLink.addEventListener('click', function (e) {
+        if (confirmBtn.classList.contains('is-running')) {
+          return; // ya jugó la animación, dejamos pasar el click
+        }
+        e.preventDefault();
+        confirmBtn.classList.add('is-running');
+
+        var runway = document.createElement('div');
+        runway.className = 'runway';
+        runway.innerHTML =
+          '<div class="ground"></div>' +
+          '<div class="bubble">¡Voy para allá!</div>' +
+          '<svg class="pup" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">' +
+            '<g class="legs">' +
+              '<rect x="60" y="88" width="10" height="24" rx="5" fill="#B2701A"/>' +
+              '<rect x="120" y="88" width="10" height="24" rx="5" fill="#8C5714"/>' +
+            '</g>' +
+            '<ellipse cx="100" cy="80" rx="55" ry="26" fill="#F2A93B"/>' +
+            '<circle cx="150" cy="62" r="22" fill="#F2A93B"/>' +
+            '<ellipse cx="163" cy="50" rx="8" ry="12" fill="#B2701A" transform="rotate(20 163 50)"/>' +
+            '<circle cx="158" cy="60" r="2.6" fill="#17264A"/>' +
+            '<ellipse cx="168" cy="70" rx="6" ry="4" fill="#17264A"/>' +
+            '<ellipse cx="55" cy="86" rx="16" ry="10" fill="#F2A93B"/>' +
+            '<path d="M35 86 q-15 -4 -22 6" stroke="#F2A93B" stroke-width="10" fill="none" stroke-linecap="round"/>' +
+            '<circle cx="150" cy="46" r="6" fill="#E2231A"/>' +
+          '</svg>';
+        document.body.appendChild(runway);
+        requestAnimationFrame(function () { runway.classList.add('active'); });
+
+        var pawCount = 6;
+        for (var i = 0; i < pawCount; i++) {
+          (function (i) {
+            setTimeout(function () {
+              var paw = document.createElement('div');
+              paw.className = 'paw';
+              paw.textContent = '🐾';
+              paw.style.left = (8 + i * 14) + '%';
+              runway.appendChild(paw);
+            }, 120 * i);
+          })(i);
+        }
+
+        setTimeout(function () {
+          window.location.href = confirmLink.href;
+          confirmBtn.classList.remove('is-running');
+          runway.classList.remove('active');
+          setTimeout(function () { runway.remove(); }, 300);
+        }, 1300);
+      });
     });
   </script>
 </body>
